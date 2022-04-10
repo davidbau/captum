@@ -357,6 +357,7 @@ class IntegratedGradients(GradientAttribution):
         # flattening grads so that we can multilpy it with step-size
         # calling contiguous to avoid `memory whole` problems
         scaled_grads = [
+            None if grad is None else
             grad.contiguous().view(n_steps, -1)
             * torch.tensor(step_sizes).view(n_steps, 1).to(grad.device)
             for grad in grads
@@ -365,6 +366,7 @@ class IntegratedGradients(GradientAttribution):
         # aggregates across all steps for each tensor in the input tuple
         # total_grads has the same dimensionality as inputs
         total_grads = tuple(
+            None if grad is None else
             _reshape_and_sum(
                 scaled_grad, n_steps, grad.shape[0] // n_steps, grad.shape[1:]
             )
@@ -377,6 +379,7 @@ class IntegratedGradients(GradientAttribution):
             attributions = total_grads
         else:
             attributions = tuple(
+                None if total_grad is None else
                 total_grad * (input - baseline)
                 for total_grad, input, baseline in zip(total_grads, inputs, baselines)
             )

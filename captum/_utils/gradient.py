@@ -268,14 +268,14 @@ def _forward_layer_distributed_eval(
                 if forward_hook_with_return:
                     saved_layer[original_module][eval_tsrs[0].device] = eval_tsrs
                     eval_tsrs_to_return = tuple(
-                        eval_tsr.clone() for eval_tsr in eval_tsrs
+                        untuple(eval_tsr).clone() for eval_tsr in eval_tsrs
                     )
                     if not is_eval_tuple:
                         eval_tsrs_to_return = eval_tsrs_to_return[0]
                     return eval_tsrs_to_return
                 else:
                     saved_layer[original_module][eval_tsrs[0].device] = tuple(
-                        eval_tsr.clone() for eval_tsr in eval_tsrs
+                        untuple(eval_tsr).clone() for eval_tsr in eval_tsrs
                     )
 
         return forward_hook
@@ -308,6 +308,17 @@ def _forward_layer_distributed_eval(
         return saved_layer, output
     return saved_layer
 
+class CloneableTuple:
+    def __init__(self, x):
+        self.x = x
+    def clone(self):
+        return tuple(p.clone() for p in self.x)
+
+def untuple(x):
+    if isinstance(x, tuple):
+        # return CloneableTuple(x)
+        return x[0]
+    return x
 
 def _gather_distributed_tensors(
     saved_layer: Dict[device, Tuple[Tensor, ...]],

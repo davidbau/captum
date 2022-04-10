@@ -475,7 +475,7 @@ class LayerIntegratedGradients(LayerAttribution, GradientAttribution):
                 )
                 # torch.unbind(forward_out) is a list of scalar tensor tuples and
                 # contains batch_size * #steps elements
-                grads = torch.autograd.grad(torch.unbind(output), inputs)
+                grads = torch.autograd.grad(torch.unbind(output), inputs, allow_unused=True)
             return grads
 
         self.ig.gradient_func = gradient_func
