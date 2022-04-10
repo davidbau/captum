@@ -157,16 +157,17 @@ if __name__ == "__main__":
         },
         package_data={"captum": package_files},
         data_files=[
-            (
-                "share/jupyter/nbextensions/jupyter-captum-insights",
-                [
-                    "captum/insights/attr_vis/widget/static/extension.js",
-                    "captum/insights/attr_vis/widget/static/index.js",
-                ],
-            ),
-            (
-                "etc/jupyter/nbconfig/notebook.d",
-                ["captum/insights/attr_vis/widget/jupyter-captum-insights.json"],
-            ),
+# Removed to allow pip install directly from git.
+#            (
+#                "share/jupyter/nbextensions/jupyter-captum-insights",
+#                [
+#                    "captum/insights/attr_vis/widget/static/extension.js",
+#                    "captum/insights/attr_vis/widget/static/index.js",
+#                ],
+#            ),
+#            (
+#                "etc/jupyter/nbconfig/notebook.d",
+#                ["captum/insights/attr_vis/widget/jupyter-captum-insights.json"],
+#            ),
         ],
     )
